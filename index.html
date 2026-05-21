@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rei do Mate – Bradesco Cidade de Deus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --verde: #1a4a2e;
+      --verde-medio: #2d6e46;
+      --verde-claro: #4a9e68;
+      --ouro: #c8952a;
+      --ouro-claro: #f0b940;
+      --creme: #fdf6e9;
+      --branco: #ffffff;
+      --texto: #1a1a1a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    nav.scrolled { background: var(--verde); box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .nav-logo img { height: 42px; filter: brightness(0) invert(1); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.05em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ouro-claro); }
+
+    /* HERO */
+    header {
+      background: var(--verde);
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding: 2rem;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(74,158,104,0.22) 0%, transparent 70%);
+    }
+    .hero-content { position: relative; z-index: 2; animation: fadeUp 1s ease both; }
+    .hero-logo { width: min(340px, 78vw); margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
+    .tagline-top {
+      display: inline-block; background: var(--ouro); color: var(--verde);
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 0.35rem 1.1rem; border-radius: 2px; margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      font-weight: 900; color: var(--branco); line-height: 1.1;
+    }
+    .hero-title span { color: var(--ouro-claro); }
+    .hero-sub { margin-top: 0.9rem; font-size: clamp(0.95rem, 2vw, 1.1rem); color: rgba(255,255,255,0.6); font-weight: 300; }
+    .hero-cta { margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: all 0.25s ease; cursor: pointer; border: none; }
+    .btn-primary { background: var(--ouro); color: var(--verde); }
+    .btn-primary:hover { background: var(--ouro-claro); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: var(--branco); border: 1.5px solid rgba(255,255,255,0.4); }
+    .btn-outline:hover { border-color: var(--ouro-claro); color: var(--ouro-claro); transform: translateY(-2px); }
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      color: rgba(255,255,255,0.3); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+      animation: bounce 2.2s infinite;
+    }
+
+    /* SOBRE */
+    .sobre {
+      background: var(--branco); padding: 6rem 2rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      max-width: 1100px; margin: 0 auto; align-items: center;
+    }
+    .sobre-texto h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--verde); line-height: 1.15; margin-bottom: 1.2rem; }
+    .sobre-texto p { font-size: 1rem; line-height: 1.8; color: #444; margin-bottom: 1rem; }
+    .sobre-img { border-radius: 6px; overflow: hidden; min-height: 380px; }
+    .sobre-img img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 380px; }
+
+    /* SEÇÃO GENÉRICA */
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 0.5rem; }
+    .section-header p { font-size: 0.95rem; }
+
+    /* BEBIDAS PROTEIN */
+    .protein { background: #fef9f0; padding: 6rem 2rem; }
+    .protein .section-header h2 { color: var(--verde); }
+    .protein .section-header p { color: #888; }
+    .protein-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .protein-card { border-radius: 8px; overflow: hidden; background: var(--branco); box-shadow: 0 2px 16px rgba(0,0,0,0.07); transition: transform 0.25s, box-shadow 0.25s; }
+    .protein-card:hover { transform: translateY(-5px); box-shadow: 0 8px 28px rgba(0,0,0,0.13); }
+    .protein-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .protein-card-body { padding: 1.1rem 1.3rem 1.4rem; }
+    .protein-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--verde); margin-bottom: 0.35rem; }
+    .protein-card-body p { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* CAFÉ DA MANHÃ */
+    .cafe { background: var(--branco); padding: 6rem 2rem; }
+    .cafe .section-header h2 { color: var(--verde); }
+    .cafe .section-header p { color: #888; }
+    .cafe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .cafe-card { border-radius: 8px; overflow: hidden; background: var(--creme); box-shadow: 0 2px 14px rgba(0,0,0,0.06); transition: transform 0.25s; }
+    .cafe-card:hover { transform: translateY(-4px); }
+    .cafe-card img { width: 100%; height: 240px; object-fit: cover; display: block; }
+    .cafe-card-body { padding: 1.1rem 1.3rem 1.4rem; }
+    .cafe-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--verde); margin-bottom: 0.3rem; }
+    .cafe-card-body p { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* SALGADOS */
+    .salgados { background: var(--verde); padding: 6rem 2rem; }
+    .salgados .section-header h2 { color: var(--branco); }
+    .salgados .section-header p { color: rgba(255,255,255,0.5); }
+    .salgados-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .salgado-card { border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); transition: transform 0.25s, background 0.25s; }
+    .salgado-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.12); }
+    .salgado-card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+    .salgado-card-body { padding: 1.1rem 1.3rem 1.4rem; }
+    .salgado-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ouro-claro); margin-bottom: 0.35rem; }
+    .salgado-card-body p { font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+    /* CROISSANTS */
+    .croissants { background: #fef9f0; padding: 6rem 2rem; }
+    .croissants .section-header h2 { color: var(--verde); }
+    .croissants .section-header p { color: #888; }
+    .croissants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .croissant-card { border-radius: 8px; overflow: hidden; background: var(--branco); box-shadow: 0 2px 16px rgba(0,0,0,0.07); transition: transform 0.25s; }
+    .croissant-card:hover { transform: translateY(-4px); }
+    .croissant-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .croissant-card-body { padding: 1.1rem 1.3rem 1.4rem; }
+    .croissant-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--verde); margin-bottom: 0.35rem; }
+    .croissant-card-body p { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* MATCHA */
+    .matcha { background: #f0f9f0; padding: 6rem 2rem; }
+    .matcha .section-header h2 { color: var(--verde); }
+    .matcha .section-header p { color: #888; }
+    .matcha-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .matcha-card { border-radius: 8px; overflow: hidden; background: var(--branco); box-shadow: 0 2px 16px rgba(0,0,0,0.07); transition: transform 0.25s; }
+    .matcha-card:hover { transform: translateY(-4px); }
+    .matcha-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .matcha-card-body { padding: 1.1rem 1.3rem 1.4rem; }
+    .matcha-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--verde-medio); margin-bottom: 0.35rem; }
+    .matcha-card-body p { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* NOSSA LOJA */
+    .nossa-loja { background: var(--verde); padding: 6rem 2rem; }
+    .nossa-loja .section-header h2 { color: var(--branco); }
+    .nossa-loja .section-header p { color: rgba(255,255,255,0.5); }
+    .loja-hero { max-width: 1100px; margin: 0 auto 2rem; border-radius: 10px; overflow: hidden; position: relative; }
+    .loja-hero img { width: 100%; height: 420px; object-fit: cover; display: block; }
+    .loja-hero-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      padding: 2rem 2rem 1.5rem;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+    }
+    .loja-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 1100px; margin: 0 auto; }
+    .loja-grid-item { border-radius: 6px; overflow: hidden; aspect-ratio: 4/3; }
+    .loja-grid-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+    .loja-grid-item:hover img { transform: scale(1.05); }
+    .loja-grid-item.tall { grid-row: span 2; aspect-ratio: unset; }
+    .loja-grid-item.tall img { height: 100%; }
+
+    /* INFO */
+    .info-section { padding: 6rem 2rem; background: var(--creme); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1000px; margin: 0 auto; }
+    .info-box { background: var(--branco); border-radius: 4px; padding: 2.5rem; border-top: 4px solid var(--ouro); }
+    .info-box h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--verde); margin-bottom: 1.5rem; }
+    .info-box ul { list-style: none; }
+    .info-box ul li { padding: 0.6rem 0; border-bottom: 1px solid #f0ebe0; font-size: 0.95rem; color: #555; display: flex; justify-content: space-between; }
+    .info-box ul li:last-child { border-bottom: none; }
+    .info-box ul li strong { color: var(--verde); }
+    .info-box address { font-style: normal; font-size: 0.95rem; color: #555; line-height: 1.9; }
+    .info-box address strong { display: block; font-size: 1rem; color: var(--verde); margin-bottom: 0.5rem; }
+    .info-box .cnpj { margin-top: 1.2rem; font-size: 0.8rem; color: #aaa; letter-spacing: 0.05em; }
+
+    /* INSTAGRAM */
+    .instagram-section { background: linear-gradient(135deg, var(--verde) 0%, var(--verde-medio) 100%); padding: 5rem 2rem; text-align: center; }
+    .instagram-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--branco); margin-bottom: 0.8rem; }
+    .instagram-section p { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 2rem; }
+    .instagram-btn { display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; padding: 0.9rem 2.2rem; border-radius: 3px; text-decoration: none; font-weight: 500; font-size: 1rem; transition: opacity 0.2s, transform 0.2s; }
+    .instagram-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    /* PRIVACIDADE */
+    .privacidade { background: var(--branco); padding: 5rem 2rem; }
+    .privacidade-inner { max-width: 800px; margin: 0 auto; }
+    .privacidade h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--verde); margin-bottom: 1.5rem; }
+    .privacidade p, .privacidade li { font-size: 0.92rem; line-height: 1.8; color: #555; margin-bottom: 0.8rem; }
+    .privacidade h3 { font-size: 1rem; color: var(--verde); margin: 1.5rem 0 0.5rem; font-weight: 600; }
+
+    /* FOOTER */
+    footer { background: #0e2a1a; color: rgba(255,255,255,0.4); padding: 2.5rem 2rem; text-align: center; font-size: 0.82rem; line-height: 1.9; }
+    footer strong { color: rgba(255,255,255,0.75); }
+    footer img { height: 30px; filter: brightness(0) invert(0.4); margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; }
+
+    /* ANIMAÇÕES */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    /* RESPONSIVO */
+    @media (max-width: 768px) {
+      .sobre { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.5rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Rei_do_Mate_logo.svg/320px-Rei_do_Mate_logo.svg.png" alt="Rei do Mate"
+         onerror="this.style.display='none'"/>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#bebidas">Bebidas</a></li>
+    <li><a href="#cafe">Café da Manhã</a></li>
+    <li><a href="#salgados">Salgados</a></li>
+    <li><a href="#loja">Nossa Loja</a></li>
+    <li><a href="#info">Localização</a></li>
+    <li><a href="#privacidade">Privacidade</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <img class="hero-logo"
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Rei_do_Mate_logo.svg/480px-Rei_do_Mate_logo.svg.png"
+         alt="Rei do Mate" onerror="this.style.display='none'"/>
+    <span class="tagline-top">📍 Bradesco · Cidade de Deus · Osasco – SP</span>
+    <h1 class="hero-title">Bradesco <span>Cidade de Deus</span></h1>
+    <p class="hero-sub">Erva-mate, sucos, vitaminas, café da manhã e muito mais</p>
+    <div class="hero-cta">
+      <a href="https://wa.me/5511940531060" class="btn btn-primary">💬 Fale pelo WhatsApp</a>
+      <a href="#info" class="btn btn-outline">📍 Como chegar</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Role para baixo
+  </div>
+</header>
+
+<!-- SOBRE -->
+<section class="sobre" id="sobre">
+  <div class="sobre-texto">
+    <h2>Uma pausa que faz bem ao corpo e à alma</h2>
+    <p>O Rei do Mate é uma das maiores redes de franquias do Brasil, com mais de 30 anos de tradição em bebidas à base de erva-mate, sucos naturais, vitaminas e snacks saudáveis.</p>
+    <p>Nossa unidade no Bradesco – Cidade de Deus está pronta para receber você com atendimento acolhedor e produtos de qualidade todos os dias da semana.</p>
+    <a href="#bebidas" class="btn btn-primary" style="margin-top:1rem; display:inline-flex;">Ver nosso cardápio</a>
+  </div>
+  <div class="sobre-img">
+    <img src="img_cafe_completo.jpg" alt="Café da Manhã Rei do Mate"/>
+  </div>
+</section>
+
+<!-- BEBIDAS PROTEIN -->
+<section class="protein" id="bebidas">
+  <div class="section-header">
+    <h2>🧃 Bebidas & Protein</h2>
+    <p>Sabor, energia e proteína do jeito que você merece</p>
+  </div>
+  <div class="protein-grid">
+    <div class="protein-card">
+      <img src="img_mates_protein.jpg" alt="Mates com Proteína"/>
+      <div class="protein-card-body">
+        <h3>Mates, Energéticos & Sucos Protein</h3>
+        <p>Adicione proteína às suas bebidas favoritas — Whey Protein ou Colágeno disponíveis.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_acai_protein.jpg" alt="Açaí Protein"/>
+      <div class="protein-card-body">
+        <h3>Açaí Protein</h3>
+        <p>Copo 500ml. Whey Protein 24g ou Colágeno 30g de proteína. Energético e delicioso!</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_cappu_gelado.jpg" alt="Cappuccino Gelado Protein"/>
+      <div class="protein-card-body">
+        <h3>Cappuccino Gelado Protein</h3>
+        <p>Whey Protein 22g ou Colágeno 31g de proteína. Cremoso e refrescante.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_cappu.jpg" alt="Cappuccino Protein"/>
+      <div class="protein-card-body">
+        <h3>Cappuccino Protein</h3>
+        <p>Whey Protein 16g ou Colágeno 21g de proteína. Aconchegante e nutritivo.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_choc_gelado.jpg" alt="Chocolate Gelado Protein"/>
+      <div class="protein-card-body">
+        <h3>Chocolate Gelado Protein</h3>
+        <p>Whey Protein 23g ou Colágeno 29g de proteína. Perfeito para qualquer hora.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_choc_quente.jpg" alt="Chocolate Quente Protein"/>
+      <div class="protein-card-body">
+        <h3>Chocolate Quente Protein</h3>
+        <p>Whey Protein 16g ou Colágeno 19g de proteína. Quentinho e reconfortante.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_mate_copo.webp" alt="Mate Gelado"/>
+      <div class="protein-card-body">
+        <h3>Mate Gelado</h3>
+        <p>O clássico que deu origem ao Rei do Mate. Refrescante, natural e cheio de energia.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_acai_copo.webp" alt="Açaí"/>
+      <div class="protein-card-body">
+        <h3>Açaí</h3>
+        <p>Açaí cremoso no copo grande. Perfeito para qualquer hora do dia.</p>
+      </div>
+    </div>
+    <div class="protein-card">
+      <img src="img_vitamina_morango.webp" alt="Vitamina de Morango"/>
+      <div class="protein-card-body">
+        <h3>Vitamina de Morango</h3>
+        <p>Fresca, cremosa e com aquele toque especial. Uma das queridinhas da casa!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATCHA -->
+<section class="matcha" id="matcha">
+  <div class="section-header">
+    <h2>🍵 Matcha</h2>
+    <p>Energia contínua, ação antioxidante e nutrição funcional para o dia a dia</p>
+  </div>
+  <div class="matcha-grid">
+    <div class="matcha-card">
+      <img src="img_matcha_gelado.jpg" alt="Matcha Gelado"/>
+      <div class="matcha-card-body">
+        <h3>Matcha Gelado</h3>
+        <p>Refrescante e cheio de antioxidantes. Uma experiência única de bem-estar.</p>
+      </div>
+    </div>
+    <div class="matcha-card">
+      <img src="img_matcha_latte.jpg" alt="Matcha Latte com Groselha"/>
+      <div class="matcha-card-body">
+        <h3>Matcha Latte com Groselha</h3>
+        <p>Matcha, leite UHT, gelo e groselha — uma combinação visualmente deslumbrante e deliciosa.</p>
+      </div>
+    </div>
+    <div class="matcha-card">
+      <img src="img_matcha_drink.jpg" alt="Matcha Funcional"/>
+      <div class="matcha-card-body">
+        <h3>Matcha Funcional</h3>
+        <p>Energia equilibrada e nutrição funcional para turbinar o seu dia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAFÉ DA MANHÃ -->
+<section class="cafe" id="cafe">
+  <div class="section-header">
+    <h2>☀️ Café da Manhã</h2>
+    <p>Comece o dia com energia — desde as 05:30 da manhã</p>
+  </div>
+  <div class="cafe-grid">
+    <div class="cafe-card">
+      <img src="img_cafe_manha.jpg" alt="Café da Manhã"/>
+      <div class="cafe-card-body">
+        <h3>Café da Manhã Completo</h3>
+        <p>Pão na chapa, ovos mexidos, omelete e café espresso. Tudo preparado com muito amor.</p>
+      </div>
+    </div>
+    <div class="cafe-card">
+      <img src="img_torrada_queijo.jpg" alt="Torrada com Queijo Gratinado"/>
+      <div class="cafe-card-body">
+        <h3>Torrada com Queijo Gratinado</h3>
+        <p>Pão artesanal com queijo gratinado, no prato do Rei — "Todo mundo precisa de amor e de um copo de mate bem gelado".</p>
+      </div>
+    </div>
+    <div class="cafe-card">
+      <img src="img_torrada_ovo.jpg" alt="Torrada com Ovo Frito"/>
+      <div class="cafe-card-body">
+        <h3>Torrada com Ovo Frito</h3>
+        <p>Pão artesanal tostado com ovo frito. Combinação clássica para começar bem o dia.</p>
+      </div>
+    </div>
+    <div class="cafe-card">
+      <img src="img_omelete_ovo.jpg" alt="Omelete"/>
+      <div class="cafe-card-body">
+        <h3>Omelete & Torradas</h3>
+        <p>Omelete fresquinho e torrada grelhada. Opções práticas e saborosas para o seu café.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SALGADOS -->
+<section class="salgados" id="salgados">
+  <div class="section-header">
+    <h2>🧆 Salgados</h2>
+    <p>Coxinhas com recheios especiais — crocantes por fora, cremosas por dentro</p>
+  </div>
+  <div class="salgados-grid">
+    <div class="salgado-card">
+      <img src="img_coxinhas1.jpg" alt="Variedade de Coxinhas"/>
+      <div class="salgado-card-body">
+        <h3>Coxinhas Especiais</h3>
+        <p>Carne seca, frango, calabresa com requeijão, camarão com catupiry e muito mais. Direto do forno pra você.</p>
+      </div>
+    </div>
+    <div class="salgado-card">
+      <img src="img_coxinhas2.jpg" alt="Sabores de Coxinha"/>
+      <div class="salgado-card-body">
+        <h3>Sabores Exclusivos</h3>
+        <p>Frango c/ requeijão, Calabresa c/ requeijão, Costela, Camarão c/ Catupiry® — escolha o seu favorito!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CROISSANTS -->
+<section class="croissants" id="croissants">
+  <div class="section-header">
+    <h2>🥐 Croissants</h2>
+    <p>Massa folhada artesanal com recheios que fazem a diferença</p>
+  </div>
+  <div class="croissants-grid">
+    <div class="croissant-card">
+      <img src="img_croissant_misto.jpg" alt="Croissant Misto"/>
+      <div class="croissant-card-body">
+        <h3>Misto</h3>
+        <p>Presunto, queijo prato, requeijão, tomate e orégano. Clássico e irresistível.</p>
+      </div>
+    </div>
+    <div class="croissant-card">
+      <img src="img_croissant_peru.jpg" alt="Peito de Peru com Queijo Branco"/>
+      <div class="croissant-card-body">
+        <h3>Peito de Peru c/ Queijo Branco</h3>
+        <p>Peito de peru, queijo branco, tomate, orégano e requeijão. Leve e gostoso.</p>
+      </div>
+    </div>
+    <div class="croissant-card">
+      <img src="img_croissant_doce.jpg" alt="Croissant Doce de Leite com Banana"/>
+      <div class="croissant-card-body">
+        <h3>Doce de Leite com Banana</h3>
+        <p>Calda de doce de leite com toque de canela. A sobremesa perfeita do seu dia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSSA LOJA -->
+<section class="nossa-loja" id="loja">
+  <div class="section-header">
+    <h2>🏠 Nossa Loja</h2>
+    <p>Um espaço aconchegante, moderno e cheio de personalidade</p>
+  </div>
+  <div class="loja-hero">
+    <img src="img_loja_interior1.webp" alt="Interior da loja Rei do Mate Bradesco"/>
+    <div class="loja-hero-caption">"Café, Amor &amp; Muito Mate" — venha nos visitar!</div>
+  </div>
+  <div class="loja-grid">
+    <div class="loja-grid-item">
+      <img src="img_loja_fachada_noite.webp" alt="Fachada da loja à noite"/>
+    </div>
+    <div class="loja-grid-item">
+      <img src="img_loja_neon.webp" alt="Letreiro neon Café Amor e Muito Mate"/>
+    </div>
+    <div class="loja-grid-item">
+      <img src="img_loja_fachada2.webp" alt="Fachada externa Rei do Mate"/>
+    </div>
+    <div class="loja-grid-item">
+      <img src="img_loja_interior2.webp" alt="Salão interno da loja"/>
+    </div>
+    <div class="loja-grid-item">
+      <img src="img_loja_torneira.webp" alt="Torneira de mate Rei do Mate"/>
+    </div>
+    <div class="loja-grid-item">
+      <img src="img_loja_neon_drink.webp" alt="Bebida e sanduíche na loja"/>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="info-section" id="info">
+  <div class="info-grid">
+    <div class="info-box">
+      <h3>🕐 Horário de Funcionamento</h3>
+      <ul>
+        <li><span>Segunda a Sexta</span><strong>05:30 – 20:30</strong></li>
+        <li><span>Sábado</span><strong>A confirmar</strong></li>
+        <li><span>Domingo</span><strong>A confirmar</strong></li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <h3>📍 Onde Estamos</h3>
+      <address>
+        <strong>Rei do Mate – Bradesco Cidade de Deus</strong>
+        12A Rua Núcleo Cidade de Deus, 777<br/>
+        Nível Conviver, Setor IV – Loja 1<br/>
+        Vila Yara – Osasco / SP<br/>
+        CEP: 06029-900
+      </address>
+      <p class="cnpj">CNPJ: 53.833.642/0001-38 · ARC Mates e Cafe LTDA</p>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="instagram-section">
+  <h2>Siga nossa unidade no Instagram</h2>
+  <p>Novidades, promoções e muito conteúdo fresquinho esperando por você</p>
+  <a href="https://instagram.com/reidomatebradescocidadededeus" target="_blank" class="instagram-btn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    @reidomatebradescocidadededeus
+  </a>
+</section>
+
+<!-- PRIVACIDADE -->
+<section class="privacidade" id="privacidade">
+  <div class="privacidade-inner">
+    <h2>Política de Privacidade</h2>
+    <p>Esta Política de Privacidade descreve como a <strong>ARC Mates e Cafe LTDA</strong> (CNPJ: 53.833.642/0001-38), operadora da unidade Rei do Mate – Bradesco Cidade de Deus, coleta, usa e protege as informações dos usuários deste site e de nossos canais de atendimento.</p>
+    <h3>1. Dados coletados</h3>
+    <p>Podemos coletar nome, número de telefone (WhatsApp), e-mail e preferências de consumo, fornecidos voluntariamente pelo cliente ao entrar em contato conosco.</p>
+    <h3>2. Finalidade do uso</h3>
+    <p>Os dados são utilizados exclusivamente para: (a) envio de informações sobre produtos, promoções e novidades; (b) atendimento ao cliente via WhatsApp; (c) melhoria dos nossos serviços.</p>
+    <h3>3. Compartilhamento de dados</h3>
+    <p>Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros sem seu consentimento, exceto quando exigido por lei.</p>
+    <h3>4. Seus direitos (LGPD)</h3>
+    <p>Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você pode solicitar acesso, correção ou exclusão dos seus dados a qualquer momento pelo nosso WhatsApp.</p>
+    <h3>5. Contato</h3>
+    <p>Dúvidas sobre esta política: entre em contato pelo WhatsApp ou pessoalmente em nossa loja no endereço indicado neste site.</p>
+    <p style="margin-top:1.5rem; font-size:0.8rem; color:#aaa;">Última atualização: maio de 2026.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Rei_do_Mate_logo.svg/320px-Rei_do_Mate_logo.svg.png" alt="Rei do Mate" onerror="this.style.display='none'"/>
+  <strong>ARC Mates e Cafe LTDA</strong><br/>
+  CNPJ: 53.833.642/0001-38 · Rei do Mate – Bradesco Cidade de Deus<br/>
+  12A Rua Núcleo Cidade de Deus, 777 – Vila Yara, Osasco/SP · CEP 06029-900<br/><br/>
+  © 2026 · Todos os direitos reservados
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+</body>
+</html>
